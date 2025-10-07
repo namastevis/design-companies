@@ -13,7 +13,7 @@ function getCompanies() {
       website: "https://designworks.com",
       cities: [
         { city: "Mumbai", vertical: "Product" },
-        { city: "Delhi", vertical: "UI/UX" },
+        { city: "Delhi", vertical: "UI/UX" }
       ],
       sector: "FMCG",
       category: "Product",
@@ -22,15 +22,15 @@ function getCompanies() {
         designation: "HR Head",
         email: "rkamat@dw.com",
         mobile: "1111111111",
-        location: "Mumbai",
+        location: "Mumbai"
       },
       designHead: {
         name: "A Desai",
         designation: "Chief Designer",
         email: "adesai@dw.com",
         mobile: "2222222222",
-        location: "Delhi",
-      },
+        location: "Delhi"
+      }
     }
   ];
 }
@@ -59,7 +59,7 @@ function renderCompanies() {
       <td>${i + 1}</td>
       <td>${c.name}</td>
       <td><a href="${c.website}" target="_blank" rel="noopener noreferrer">${c.website.replace(/^https?:\/\//, "")}</a></td>
-      <td>${c.cities.map((cv) => `${cv.city} (${cv.vertical})`).join(", ")}</td>
+      <td>${c.cities.map(cv => `${cv.city} (${cv.vertical})`).join(", ")}</td>
       <td>${c.sector}</td>
       <td>${c.category}</td>`;
     if (isLoggedIn) {
@@ -85,9 +85,10 @@ function renderCompanies() {
   document.getElementById("add-company-section").style.display = isLoggedIn ? "block" : "none";
 }
 
-// Mode toggle (Day/Night-icon morph)
+// Mode toggle (Sun/Moon icon switch)
 const modeToggle = document.getElementById("mode-toggle");
-const modeShape = document.getElementById("mode-shape");
+const sunIcon = document.getElementById("sun-icon");
+const moonIcon = document.getElementById("moon-icon");
 
 modeToggle.addEventListener("click", () => {
   const body = document.body;
@@ -95,13 +96,23 @@ modeToggle.addEventListener("click", () => {
   if (isDay) {
     body.classList.remove("day-mode");
     body.classList.add("night-mode");
-    modeShape.setAttribute("d", "M17.5 12A5.5 5.5 0 0012 6.5a5.5 5.5 0 000 11 5.5 5.5 0 005.5-5.5z");
+    sunIcon.style.display = "none";
+    moonIcon.style.display = "inline";
   } else {
     body.classList.remove("night-mode");
     body.classList.add("day-mode");
-    modeShape.setAttribute("d", "M12 5a7 7 0 1 0 7 7");
+    sunIcon.style.display = "inline";
+    moonIcon.style.display = "none";
   }
 });
+// Initial icon state
+if (document.body.classList.contains("night-mode")) {
+  sunIcon.style.display = "none";
+  moonIcon.style.display = "inline";
+} else {
+  sunIcon.style.display = "inline";
+  moonIcon.style.display = "none";
+}
 
 // Search filter
 const searchBar = document.getElementById("search-bar");
@@ -117,7 +128,7 @@ searchBar.addEventListener("input", () => {
       c.name.toLowerCase(),
       c.sector.toLowerCase(),
       c.category.toLowerCase(),
-      (c.cities || []).map((cv) => `${cv.city.toLowerCase()} ${cv.vertical.toLowerCase()}`).join(" "),
+      (c.cities || []).map(cv => `${cv.city.toLowerCase()} ${cv.vertical.toLowerCase()}`).join(" ")
     ].join(" ");
     return searchableFields.includes(query);
   });
@@ -164,19 +175,16 @@ document.getElementById("logout-btn").onclick = () => {
   renderCompanies();
 };
 
-// Add company form
+// Add company
 document.getElementById("add-company-form").onsubmit = (e) => {
   e.preventDefault();
   const newCompany = {
     name: document.getElementById("company-name").value,
     website: document.getElementById("company-website").value,
-    cities: document
-      .getElementById("company-cities")
-      .value.split(",")
-      .map((item) => {
-        let [city, vertical] = item.split(":").map((v) => v.trim());
-        return { city, vertical };
-      }),
+    cities: document.getElementById("company-cities").value.split(",").map((item) => {
+      let [city, vertical] = item.split(":").map((v) => v.trim());
+      return { city, vertical };
+    }),
     sector: document.getElementById("company-sector").value,
     category: document.getElementById("company-category").value,
     hr: {
@@ -184,15 +192,15 @@ document.getElementById("add-company-form").onsubmit = (e) => {
       designation: document.getElementById("hr-designation").value,
       email: document.getElementById("hr-email").value,
       mobile: document.getElementById("hr-mobile").value,
-      location: document.getElementById("hr-location").value,
+      location: document.getElementById("hr-location").value
     },
     designHead: {
       name: document.getElementById("dh-name").value,
       designation: document.getElementById("dh-designation").value,
       email: document.getElementById("dh-email").value,
       mobile: document.getElementById("dh-mobile").value,
-      location: document.getElementById("dh-location").value,
-    },
+      location: document.getElementById("dh-location").value
+    }
   };
   companies.push(newCompany);
   saveCompanies(companies);
@@ -202,6 +210,5 @@ document.getElementById("add-company-form").onsubmit = (e) => {
   e.target.reset();
 };
 
-// Initial load
 companies = getCompanies();
 renderCompanies();
