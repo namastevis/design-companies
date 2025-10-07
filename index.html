@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design companies dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="day-mode">
+    <header>
+      <div class="container">
+        <div class="header-left">
+          <h1>Design companies dashboard</h1>
+          <p class="subtitle">
+            A curated directory of design-driven companies, their sectors, and
+            contacts.
+          </p>
+        </div>
+        <nav>
+          <button
+            id="mode-toggle"
+            aria-label="Toggle day/night mode"
+            class="icon-toggle-btn"
+          >
+            <!-- Sun/moon icon SVG (stylized for pill icon look) -->
+            <svg
+              id="mode-icon"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="7"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+              />
+              <path
+                id="mode-shape"
+                d="M12 5a7 7 0 1 0 7 7"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+              />
+            </svg>
+          </button>
+          <button id="login-btn" class="pill-btn">Login</button>
+          <button id="logout-btn" style="display: none" class="pill-btn">
+            Logout
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="search-section">
+        <input
+          type="search"
+          id="search-bar"
+          placeholder="Search companies…"
+          aria-label="Search companies"
+        />
+      </section>
+      <section id="company-list" aria-label="Company List">
+        <!-- Company Table Injected -->
+      </section>
+      <section
+        id="add-company-section"
+        style="display: none"
+        aria-label="Add Company Form"
+      >
+        <h2>Add Company</h2>
+        <form id="add-company-form" novalidate>
+          <fieldset>
+            <legend>Company Details</legend>
+            <input
+              type="text"
+              id="company-name"
+              placeholder="Company Name"
+              required
+            />
+            <input
+              type="url"
+              id="company-website"
+              placeholder="Company Website (https://...)"
+              required
+            />
+            <input
+              type="text"
+              id="company-cities"
+              placeholder="Cities & Verticals (city:vertical, ...)"
+              required
+            />
+            <input
+              type="text"
+              id="company-sector"
+              placeholder="Sector (e.g. FMCG)"
+              required
+            />
+            <input
+              type="text"
+              id="company-category"
+              placeholder="Design Category (e.g. Product)"
+              required
+            />
+          </fieldset>
+          <fieldset>
+            <legend>HR Details</legend>
+            <input type="text" id="hr-name" placeholder="HR Name" required />
+            <input
+              type="text"
+              id="hr-designation"
+              placeholder="HR Designation"
+              required
+            />
+            <input type="email" id="hr-email" placeholder="HR Email" required />
+            <input type="tel" id="hr-mobile" placeholder="HR Mobile" required />
+            <input
+              type="text"
+              id="hr-location"
+              placeholder="HR Location"
+              required
+            />
+          </fieldset>
+          <fieldset>
+            <legend>Design Head Details</legend>
+            <input
+              type="text"
+              id="dh-name"
+              placeholder="Design Head Name"
+              required
+            />
+            <input
+              type="text"
+              id="dh-designation"
+              placeholder="Design Head Designation"
+              required
+            />
+            <input
+              type="email"
+              id="dh-email"
+              placeholder="Design Head Email"
+              required
+            />
+            <input
+              type="tel"
+              id="dh-mobile"
+              placeholder="Design Head Mobile"
+              required
+            />
+            <input
+              type="text"
+              id="dh-location"
+              placeholder="Design Head Location"
+              required
+            />
+          </fieldset>
+          <button type="submit" class="pill-btn accent">Add Company</button>
+        </form>
+      </section>
+    </main>
+
+    <div
+      id="login-modal"
+      class="modal"
+      aria-hidden="true"
+      role="dialog"
+      aria-labelledby="login-title"
+    >
+      <div class="modal-content">
+        <h2 id="login-title">Login</h2>
+        <form id="login-form" novalidate>
+          <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            required
+            autocomplete="username"
+          />
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+            autocomplete="current-password"
+          />
+          <button type="submit" class="pill-btn accent">Login</button>
+        </form>
+        <button id="close-login" class="pill-btn">Cancel</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
