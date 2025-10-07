@@ -283,6 +283,7 @@ body.night-mode input:focus {
   outline: 2px solid #ab455b;
 }
 
+/* MODAL SPACING FIX */
 .modal {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -300,15 +301,29 @@ body.night-mode input:focus {
 .modal-content {
   background: var(--white);
   min-width: 320px;
-  padding: 38px 30px;
+  padding: 44px 32px 36px 32px;  /* More space all around */
   border-radius: 18px;
   box-shadow: var(--shadow);
   text-align: center;
+  margin: 20px;                  /* Prevent edge collision, especially on mobile */
+  box-sizing: border-box;
 }
 
 body.night-mode .modal-content {
   background: #28282c;
   color: #fff;
+}
+
+#login-modal input[type='text'],
+#login-modal input[type='password'] {
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+#login-modal button {
+  margin-bottom: 10px;
 }
 
 @media (max-width: 700px) {
@@ -333,7 +348,7 @@ body.night-mode .modal-content {
   .header-left { margin-bottom: 12px; }
   nav { justify-content: flex-end; }
   #company-list table { font-size: 0.95rem; }
-  .modal-content { padding: 18px 8px; }
+  .modal-content { padding: 24px 10px 20px 10px; margin: 4vw; }
   input[type='text'], input[type='email'], input[type='url'], input[type='tel'] {
     font-size: 0.98rem;
   }
