@@ -3,6 +3,7 @@ const DEMO_USER = { username: "admin", password: "password123" };
 let isLoggedIn = false;
 let companies = [];
 let filteredCompanies = [];
+let editIndex = null;
 
 function getCompanies() {
   const data = localStorage.getItem("companies");
@@ -50,7 +51,7 @@ function renderCompanies() {
         <th>Cities & Verticals</th>
         <th>Sector</th>
         <th>Design Category</th>
-        ${isLoggedIn ? "<th>HR Contact</th><th>Design Head</th>" : ""}
+        ${isLoggedIn ? "<th>HR Contact</th><th>Design Head</th><th>Edit</th>" : ""}
       </tr>
     </thead>
     <tbody>`;
@@ -76,6 +77,9 @@ function renderCompanies() {
         <a href="mailto:${c.designHead.email}">${c.designHead.email}</a><br />
         ${c.designHead.mobile}<br />
         ${c.designHead.location}
+      </td>
+      <td>
+        <button class="pill-btn edit-btn" onclick="startEdit(${findCompanyIndex(i)})">Edit</button>
       </td>`;
     }
     html += "</tr>";
@@ -85,7 +89,87 @@ function renderCompanies() {
   document.getElementById("add-company-section").style.display = isLoggedIn ? "block" : "none";
 }
 
-// Mode toggle (Sun/Moon icon switch)
+window.startEdit = function(index) {
+  editIndex = index;
+  document.getElementById("form-title").textContent = "Edit Company";
+  document.getElementById("submit-btn").textContent = "Save Changes";
+  document.getElementById("cancel-edit-btn").style.display = "inline";
+  const c = companies[index];
+  document.getElementById("company-name").value = c.name;
+  document.getElementById("company-website").value = c.website;
+  document.getElementById("company-cities").value = c.cities.map(cv => `${cv.city}:${cv.vertical}`).join(", ");
+  document.getElementById("company-sector").value = c.sector;
+  document.getElementById("company-category").value = c.category;
+  document.getElementById("hr-name").value = c.hr.name;
+  document.getElementById("hr-designation").value = c.hr.designation;
+  document.getElementById("hr-email").value = c.hr.email;
+  document.getElementById("hr-mobile").value = c.hr.mobile;
+  document.getElementById("hr-location").value = c.hr.location;
+  document.getElementById("dh-name").value = c.designHead.name;
+  document.getElementById("dh-designation").value = c.designHead.designation;
+  document.getElementById("dh-email").value = c.designHead.email;
+  document.getElementById("dh-mobile").value = c.designHead.mobile;
+  document.getElementById("dh-location").value = c.designHead.location;
+}
+
+function findCompanyIndex(displayIndex) {
+  if (filteredCompanies.length) {
+    const name = filteredCompanies[displayIndex].name;
+    return companies.findIndex(c => c.name === name);
+  } else {
+    return displayIndex;
+  }
+}
+
+document.getElementById("cancel-edit-btn").onclick = () => {
+  editIndex = null;
+  document.getElementById("add-company-form").reset();
+  document.getElementById("form-title").textContent = "Add Company";
+  document.getElementById("submit-btn").textContent = "Add Company";
+  document.getElementById("cancel-edit-btn").style.display = "none";
+};
+
+document.getElementById("add-company-form").onsubmit = function(e) {
+  e.preventDefault();
+  const updatedCompany = {
+    name: document.getElementById("company-name").value,
+    website: document.getElementById("company-website").value,
+    cities: document.getElementById("company-cities").value.split(",").map((item) => {
+      let [city, vertical] = item.split(":").map((v) => v.trim());
+      return { city, vertical };
+    }),
+    sector: document.getElementById("company-sector").value,
+    category: document.getElementById("company-category").value,
+    hr: {
+      name: document.getElementById("hr-name").value,
+      designation: document.getElementById("hr-designation").value,
+      email: document.getElementById("hr-email").value,
+      mobile: document.getElementById("hr-mobile").value,
+      location: document.getElementById("hr-location").value
+    },
+    designHead: {
+      name: document.getElementById("dh-name").value,
+      designation: document.getElementById("dh-designation").value,
+      email: document.getElementById("dh-email").value,
+      mobile: document.getElementById("dh-mobile").value,
+      location: document.getElementById("dh-location").value
+    }
+  };
+  if (editIndex !== null) {
+    companies[editIndex] = updatedCompany;
+    editIndex = null;
+    document.getElementById("form-title").textContent = "Add Company";
+    document.getElementById("submit-btn").textContent = "Add Company";
+    document.getElementById("cancel-edit-btn").style.display = "none";
+  } else {
+    companies.push(updatedCompany);
+  }
+  saveCompanies(companies);
+  filteredCompanies = [];
+  document.getElementById("add-company-form").reset();
+  renderCompanies();
+};
+
 const modeToggle = document.getElementById("mode-toggle");
 const sunIcon = document.getElementById("sun-icon");
 const moonIcon = document.getElementById("moon-icon");
@@ -105,7 +189,6 @@ modeToggle.addEventListener("click", () => {
     moonIcon.style.display = "none";
   }
 });
-// Initial icon state
 if (document.body.classList.contains("night-mode")) {
   sunIcon.style.display = "none";
   moonIcon.style.display = "inline";
@@ -114,7 +197,6 @@ if (document.body.classList.contains("night-mode")) {
   moonIcon.style.display = "none";
 }
 
-// Search filter
 const searchBar = document.getElementById("search-bar");
 searchBar.addEventListener("input", () => {
   const query = searchBar.value.trim().toLowerCase();
@@ -135,7 +217,6 @@ searchBar.addEventListener("input", () => {
   renderCompanies();
 });
 
-// Login modal controls
 document.getElementById("login-btn").onclick = () => {
   const modal = document.getElementById("login-modal");
   modal.setAttribute("aria-hidden", "false");
@@ -173,41 +254,6 @@ document.getElementById("logout-btn").onclick = () => {
   document.getElementById("login-btn").style.display = "inline";
   document.getElementById("logout-btn").style.display = "none";
   renderCompanies();
-};
-
-// Add company
-document.getElementById("add-company-form").onsubmit = (e) => {
-  e.preventDefault();
-  const newCompany = {
-    name: document.getElementById("company-name").value,
-    website: document.getElementById("company-website").value,
-    cities: document.getElementById("company-cities").value.split(",").map((item) => {
-      let [city, vertical] = item.split(":").map((v) => v.trim());
-      return { city, vertical };
-    }),
-    sector: document.getElementById("company-sector").value,
-    category: document.getElementById("company-category").value,
-    hr: {
-      name: document.getElementById("hr-name").value,
-      designation: document.getElementById("hr-designation").value,
-      email: document.getElementById("hr-email").value,
-      mobile: document.getElementById("hr-mobile").value,
-      location: document.getElementById("hr-location").value
-    },
-    designHead: {
-      name: document.getElementById("dh-name").value,
-      designation: document.getElementById("dh-designation").value,
-      email: document.getElementById("dh-email").value,
-      mobile: document.getElementById("dh-mobile").value,
-      location: document.getElementById("dh-location").value
-    }
-  };
-  companies.push(newCompany);
-  saveCompanies(companies);
-  filteredCompanies = [];
-  searchBar.value = "";
-  renderCompanies();
-  e.target.reset();
 };
 
 companies = getCompanies();

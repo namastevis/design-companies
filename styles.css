@@ -140,6 +140,25 @@ body.night-mode .pill-btn {
   color: #eecfd7;
 }
 
+.pill-btn.edit-btn {
+  background: var(--accent-light);
+  color: #fff;
+  margin-left: 8px;
+  min-width: 66px;
+  font-size: 0.95rem;
+  padding: 0 12px;
+  height: 38px;
+}
+
+.pill-btn.edit-btn:hover {
+  background: var(--accent);
+}
+
+#cancel-edit-btn {
+  margin-left: 12px;
+  margin-top: 10px;
+}
+
 .search-section {
   margin: 38px 0 10px;
   text-align: right;
@@ -171,7 +190,6 @@ main.container {
   padding-bottom: 36px;
 }
 
-/* Table styles */
 #company-list table {
   width: 100%;
   border-collapse: separate;
@@ -182,7 +200,6 @@ main.container {
   overflow: hidden;
   box-shadow: 0 2px 16px rgba(46,41,38,0.05);
 }
-
 body.night-mode #company-list table {
   background: #28282c;
   color: #fff;
@@ -243,13 +260,11 @@ fieldset {
   margin-bottom: 28px;
   padding: 0;
 }
-
 legend {
   font-size: 1.1rem;
   color: var(--accent);
   font-weight: 600;
 }
-
 input[type='text'],
 input[type='email'],
 input[type='url'],
@@ -266,7 +281,6 @@ input[type='tel'] {
   box-shadow: var(--shadow);
   transition: background 0.18s;
 }
-
 input[type='text']:focus,
 input[type='email']:focus,
 input[type='url']:focus,
@@ -275,15 +289,12 @@ input[type='tel']:focus {
   outline: 2px solid var(--accent);
   background: #fff;
 }
-
 body.night-mode input,
 body.night-mode input:focus {
   background: #23232a;
   color: #f2efe3;
   outline: 2px solid #ab455b;
 }
-
-/* MODAL SPACING FIX */
 .modal {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -293,27 +304,23 @@ body.night-mode input:focus {
   justify-content: center;
   z-index: 99;
 }
-
 .modal[aria-hidden='false'] {
   display: flex;
 }
-
 .modal-content {
   background: var(--white);
   min-width: 320px;
-  padding: 44px 32px 36px 32px;  /* More space all around */
+  padding: 44px 32px 36px 32px;
   border-radius: 18px;
   box-shadow: var(--shadow);
   text-align: center;
-  margin: 20px;                  /* Prevent edge collision, especially on mobile */
+  margin: 20px;
   box-sizing: border-box;
 }
-
 body.night-mode .modal-content {
   background: #28282c;
   color: #fff;
 }
-
 #login-modal input[type='text'],
 #login-modal input[type='password'] {
   margin-bottom: 22px;
@@ -321,11 +328,9 @@ body.night-mode .modal-content {
   border-radius: 12px;
   box-sizing: border-box;
 }
-
 #login-modal button {
   margin-bottom: 10px;
 }
-
 @media (max-width: 700px) {
   header, .container, main.container {
     padding-left: 8px;
@@ -337,8 +342,6 @@ body.night-mode .modal-content {
   }
   h1 { font-size: 1.4rem; }
 }
-
-/* Good mobile modes */
 @media (max-width: 540px) {
   header .container {
     flex-direction: column;
