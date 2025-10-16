@@ -1,30 +1,28 @@
 :root {
-  --cream: #f9f6f2;
-  --white: #fff;
-  --beige: #f7ede3;
-  --accent: #7a1f33;
-  --accent-light: #ab455b;
-  --grey: #dad8ce;
-  --grey-dark: #5b5b5b;
-  --pill-bg: #eceae3;
-  --input-bg: #f7f5f0;
-  --shadow: 0 2px 16px rgba(0,0,0,0.04);
-  --modal-bg: #222231cc;
+  --cream: #f5f7fa;
+  --white: #ffffff;
+  --accent: #556ee6;
+  --accent-light: #768fff;
+  --grey-dark: #3a3f58;
+  --pill-bg: #e7eafc;
+  --input-bg: #f5f7fa;
+  --shadow: 0 2px 12px rgba(85,110,230,0.15);
+  --modal-bg: rgba(0,0,0,0.5);
 }
 
 body {
   background: var(--cream);
   color: var(--grey-dark);
   font-family: 'Inter', Arial, sans-serif;
-  font-size: 1.08rem;
   margin: 0;
   padding: 0;
   letter-spacing: 0.01em;
+  font-size: 1.08rem;
 }
 
 body.night-mode {
-  background: #222;
-  color: #f2efe3;
+  background: #20232b;
+  color: #cfd8fc;
 }
 
 h1 {
@@ -36,7 +34,6 @@ h1 {
 }
 
 .subtitle {
-  color: var(--grey-dark);
   opacity: 0.7;
   font-size: 1rem;
   margin-bottom: 0;
@@ -47,20 +44,20 @@ h1 {
 }
 
 header {
-  background: var(--beige);
-  border-bottom: 1px solid var(--grey);
+  background: var(--white);
+  border-bottom: 1px solid #dedfe3;
   box-shadow: var(--shadow);
-  padding: 36px 0 18px;
+  padding: 36px 20px 18px;
 }
 
 body.night-mode header {
-  background: #292929;
-  border-color: #444;
+  background: #2a2d3e;
+  border-color: #44475a;
 }
 
 header .container {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   max-width: 1100px;
   margin: 0 auto;
@@ -68,119 +65,48 @@ header .container {
 
 nav {
   display: flex;
-  gap: 12px;
-}
-
-.icon-toggle-btn {
-  background: var(--pill-bg);
-  border: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  margin-right: 8px;
-  cursor: pointer;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow);
-  transition: background 0.2s;
 }
 
-.icon-toggle-btn:hover,
-.icon-toggle-btn:focus {
-  background: #e3e1d9;
+/* Filter Section */
+.filter-section {
+  margin: 20px 0;
+  font-size: 1.1rem;
 }
 
-body.night-mode .icon-toggle-btn {
-  background: #171718;
+#category-filters {
+  margin-top: 8px;
 }
 
-body.night-mode .icon-toggle-btn svg {
-  color: #fbf4d7;
-}
-
-.icon-toggle-btn svg {
-  color: var(--accent);
-  width: 28px;
-  height: 28px;
-  transition: color 0.3s;
-}
-
-.pill-btn {
+#category-filters .pill-btn {
   background: var(--pill-bg);
-  color: var(--accent);
+  border-radius: 20px;
+  padding: 6px 14px;
   font-weight: 600;
+  color: var(--accent);
+  box-shadow: var(--shadow);
   border: none;
-  border-radius: 999px;
-  padding: 0 20px;
-  font-size: 1.08rem;
-  height: 44px;
-  min-width: 88px;
-  margin-left: 0;
   cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: background 0.18s, color 0.18s;
-  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.pill-btn.accent {
+#category-filters .pill-btn.accent {
   background: var(--accent);
   color: #fff;
 }
 
-.pill-btn:hover,
-.pill-btn:focus {
+body.night-mode #category-filters .pill-btn {
+  background: #2e3248;
+  color: #9ca3ff;
+  box-shadow: none;
+}
+
+body.night-mode #category-filters .pill-btn.accent {
   background: var(--accent-light);
-  color: #fff;
-}
-
-body.night-mode .pill-btn {
-  background: #1a1a1d;
-  color: #eecfd7;
-}
-
-.pill-btn.edit-btn {
-  background: var(--accent-light);
-  color: #fff;
-  margin-left: 8px;
-  min-width: 66px;
-  font-size: 0.95rem;
-  padding: 0 12px;
-  height: 38px;
-}
-
-.pill-btn.edit-btn:hover {
-  background: var(--accent);
-}
-
-#cancel-edit-btn {
-  margin-left: 12px;
-  margin-top: 10px;
-}
-
-.search-section {
-  margin: 38px 0 10px;
-  text-align: right;
-}
-
-#search-bar {
-  background: var(--input-bg);
-  color: var(--grey-dark);
-  border: none;
-  border-radius: 18px;
-  font-size: 1.09rem;
-  padding: 10px 22px;
-  box-shadow: var(--shadow);
-  margin-bottom: 18px;
-  width: 100%;
-  max-width: 380px;
-  transition: background 0.18s;
-}
-
-body.night-mode #search-bar {
-  background: #28282b;
-  color: #f2efe3;
+  color: #20232b;
+  box-shadow: 0 0 8px var(--accent-light);
 }
 
 main.container {
@@ -198,8 +124,9 @@ main.container {
   background: var(--white);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 16px rgba(46,41,38,0.05);
+  box-shadow: 0 2px 16px rgba(85,110,230,0.1);
 }
+
 body.night-mode #company-list table {
   background: #28282c;
   color: #fff;
@@ -216,21 +143,22 @@ body.night-mode #company-list table {
   color: #fff;
   font-weight: 600;
   text-align: left;
-  font-size: 1.09rem;
+  font-size: 1.1rem;
   border-bottom: 2px solid #f0ece6;
 }
 
 body.night-mode #company-list th {
-  background: #50111c;
+  background: #556ee6;
 }
 
 #company-list td {
-  border-bottom: 1px solid var(--beige);
+  border-bottom: 1px solid #dedfe3;
   font-size: 1.07rem;
+  vertical-align: middle;
 }
 
 body.night-mode #company-list td {
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #44475a;
 }
 
 #company-list tr:last-child td {
@@ -238,121 +166,46 @@ body.night-mode #company-list td {
 }
 
 #company-list tbody tr:nth-child(even) {
-  background: #f6f4ef;
+  background: #f0f4ff;
 }
 
 body.night-mode #company-list tbody tr:nth-child(even) {
-  background: #23232a;
+  background: #2b2f48;
 }
 
 #company-list a {
-  color: var(--accent);
+  color: #556ee6;
   text-decoration: underline;
 }
 
 body.night-mode #company-list a {
-  color: #ffadbb;
+  color: #90a7ff;
 }
 
-/* Form styles */
-fieldset {
+/* Toggle button */
+.icon-toggle-btn {
+  background: var(--pill-bg);
   border: none;
-  margin-bottom: 28px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
   padding: 0;
-}
-legend {
-  font-size: 1.1rem;
-  color: var(--accent);
-  font-weight: 600;
-}
-input[type='text'],
-input[type='email'],
-input[type='url'],
-input[type='password'],
-input[type='tel'] {
-  width: 100%;
-  padding: 14px 15px;
-  margin: 12px 0 18px 0;
-  border-radius: 14px;
-  border: none;
-  background: var(--input-bg);
-  color: var(--grey-dark);
-  font-size: 1.07rem;
-  box-shadow: var(--shadow);
-  transition: background 0.18s;
-}
-input[type='text']:focus,
-input[type='email']:focus,
-input[type='url']:focus,
-input[type='password']:focus,
-input[type='tel']:focus {
-  outline: 2px solid var(--accent);
-  background: #fff;
-}
-body.night-mode input,
-body.night-mode input:focus {
-  background: #23232a;
-  color: #f2efe3;
-  outline: 2px solid #ab455b;
-}
-.modal {
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: var(--modal-bg);
-  display: none;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99;
-}
-.modal[aria-hidden='false'] {
-  display: flex;
-}
-.modal-content {
-  background: var(--white);
-  min-width: 320px;
-  padding: 44px 32px 36px 32px;
-  border-radius: 18px;
   box-shadow: var(--shadow);
-  text-align: center;
-  margin: 20px;
-  box-sizing: border-box;
+  transition: background 0.3s;
 }
-body.night-mode .modal-content {
-  background: #28282c;
+
+.icon-toggle-btn:hover,
+.icon-toggle-btn:focus {
+  background: var(--accent-light);
   color: #fff;
 }
-#login-modal input[type='text'],
-#login-modal input[type='password'] {
-  margin-bottom: 22px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  box-sizing: border-box;
-}
-#login-modal button {
-  margin-bottom: 10px;
-}
-@media (max-width: 700px) {
-  header, .container, main.container {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  #company-list th, #company-list td {
-    padding: 10px 6px;
-    font-size: 0.95rem;
-  }
-  h1 { font-size: 1.4rem; }
-}
-@media (max-width: 540px) {
-  header .container {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0 5px;
-  }
-  .header-left { margin-bottom: 12px; }
-  nav { justify-content: flex-end; }
-  #company-list table { font-size: 0.95rem; }
-  .modal-content { padding: 24px 10px 20px 10px; margin: 4vw; }
-  input[type='text'], input[type='email'], input[type='url'], input[type='tel'] {
-    font-size: 0.98rem;
-  }
+
+body.night-mode .icon-toggle-btn {
+  background: #2e3248;
+  color: #90a7ff;
 }

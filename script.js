@@ -1,47 +1,106 @@
-const DEMO_USER = { username: "admin", password: "password123" };
+const SHEET_ID = '1gcKHjPRnHREzSIvIQbT7Gq2n7iLjPJHO1_zLOK70JQU';
+const SHEET_RANGE = 'Sheet1!A2:O';
+const API_KEY = 'AIzaSyD11rViAA48UbgreiZli__U4fWSss1d9tU';
 
-let isLoggedIn = false;
+const categories = [
+  "UI/UX",
+  "Product",
+  "Branding",
+  "Interaction Design",
+  "Visual Design",
+  "Service Design",
+  "Industrial Design"
+];
+
 let companies = [];
 let filteredCompanies = [];
-let editIndex = null;
+let activeCategory = null;
 
-function getCompanies() {
-  const data = localStorage.getItem("companies");
-  if (data) return JSON.parse(data);
-  return [
-    {
-      name: "DesignWorks",
-      website: "https://designworks.com",
-      cities: [
-        { city: "Mumbai", vertical: "Product" },
-        { city: "Delhi", vertical: "UI/UX" }
-      ],
-      sector: "FMCG",
-      category: "Product",
-      hr: {
-        name: "R Kamat",
-        designation: "HR Head",
-        email: "rkamat@dw.com",
-        mobile: "1111111111",
-        location: "Mumbai"
-      },
-      designHead: {
-        name: "A Desai",
-        designation: "Chief Designer",
-        email: "adesai@dw.com",
-        mobile: "2222222222",
-        location: "Delhi"
-      }
-    }
-  ];
+function parseCitiesVerticals(text) {
+  if (!text) return [];
+  return text.split(',').map(item => {
+    const [city, vertical] = item.split(':').map(s => s.trim());
+    return { city, vertical };
+  });
 }
 
-function saveCompanies(companies) {
-  localStorage.setItem("companies", JSON.stringify(companies));
+function fetchCompaniesFromSheet() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_RANGE}?key=${API_KEY}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (!data.values) {
+        alert('No data found in the Google Sheet.');
+        return [];
+      }
+      return data.values.map(row => ({
+        name: row[0],
+        website: row[1],
+        cities: parseCitiesVerticals(row[2]),
+        sector: row[3] || '',
+        category: row[4] || '',
+        contactType: row[5] || '',
+        hr: {
+          name: row[6] || '',
+          designation: row[7] || '',
+          email: row[8] || '',
+          mobile: row[9] || '',
+          location: row[10] || ''
+        },
+        designHead: {
+          name: row[11] || '',
+          designation: row[12] || '',
+          email: row[13] || '',
+          mobile: row[14] || '',
+          location: row[15] || ''
+        }
+      }));
+    });
+}
+
+function renderCategoryFilters() {
+  const container = document.getElementById('category-filters');
+  container.innerHTML = '';
+
+  const allBtn = document.createElement('button');
+  allBtn.textContent = 'All';
+  allBtn.className = activeCategory === null ? 'pill-btn accent' : 'pill-btn';
+  allBtn.onclick = () => {
+    if (activeCategory === null) {
+      // Deselect All if clicked again
+      activeCategory = null;
+      filteredCompanies = companies;
+    } else {
+      activeCategory = null;
+      filteredCompanies = companies;
+    }
+    renderCategoryFilters();
+    renderCompanies();
+  };
+  container.appendChild(allBtn);
+
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.className = activeCategory === cat ? 'pill-btn accent' : 'pill-btn';
+    btn.onclick = () => {
+      if (activeCategory === cat) {
+        // Toggle off filter if same filter clicked
+        activeCategory = null;
+        filteredCompanies = companies;
+      } else {
+        activeCategory = cat;
+        filteredCompanies = companies.filter(c => c.category === cat);
+      }
+      renderCategoryFilters();
+      renderCompanies();
+    };
+    container.appendChild(btn);
+  });
 }
 
 function renderCompanies() {
-  const dataToDisplay = filteredCompanies.length ? filteredCompanies : companies;
+  const dataToDisplay = filteredCompanies.length || activeCategory !== null ? filteredCompanies : companies;
   let html = `<table>
     <thead>
       <tr>
@@ -50,211 +109,69 @@ function renderCompanies() {
         <th>Website</th>
         <th>Cities & Verticals</th>
         <th>Sector</th>
-        <th>Design Category</th>
-        ${isLoggedIn ? "<th>HR Contact</th><th>Design Head</th><th>Edit</th>" : ""}
+        <th>Category</th>
+        <th>Type</th>
+        <th>Design Head</th>
       </tr>
     </thead>
     <tbody>`;
+
   dataToDisplay.forEach((c, i) => {
     html += `<tr>
       <td>${i + 1}</td>
       <td>${c.name}</td>
-      <td><a href="${c.website}" target="_blank" rel="noopener noreferrer">${c.website.replace(/^https?:\/\//, "")}</a></td>
-      <td>${c.cities.map(cv => `${cv.city} (${cv.vertical})`).join(", ")}</td>
+      <td><a href="${c.website}" target="_blank" rel="noopener noreferrer">${c.website.replace(/^https?:\/\//, '')}</a></td>
+      <td>${c.cities.map(cv => `${cv.city} (${cv.vertical})`).join(', ')}</td>
       <td>${c.sector}</td>
-      <td>${c.category}</td>`;
-    if (isLoggedIn) {
-      html += `<td>
-        <strong>${c.hr.name}</strong><br />
-        ${c.hr.designation}<br />
-        <a href="mailto:${c.hr.email}">${c.hr.email}</a><br />
-        ${c.hr.mobile}<br />
-        ${c.hr.location}
-      </td>
-      <td>
-        <strong>${c.designHead.name}</strong><br />
-        ${c.designHead.designation}<br />
-        <a href="mailto:${c.designHead.email}">${c.designHead.email}</a><br />
-        ${c.designHead.mobile}<br />
-        ${c.designHead.location}
-      </td>
-      <td>
-        <button class="pill-btn edit-btn" onclick="startEdit(${findCompanyIndex(i)})">Edit</button>
-      </td>`;
-    }
-    html += "</tr>";
+      <td>${c.category}</td>
+      <td>${c.contactType}</td>
+      <td>${c.designHead.name}</td>
+    </tr>`;
   });
-  html += "</tbody></table>";
-  document.getElementById("company-list").innerHTML = html;
-  document.getElementById("add-company-section").style.display = isLoggedIn ? "block" : "none";
+
+  html += '</tbody></table>';
+  document.getElementById('company-list').innerHTML = html;
 }
 
-window.startEdit = function(index) {
-  editIndex = index;
-  document.getElementById("form-title").textContent = "Edit Company";
-  document.getElementById("submit-btn").textContent = "Save Changes";
-  document.getElementById("cancel-edit-btn").style.display = "inline";
-  const c = companies[index];
-  document.getElementById("company-name").value = c.name;
-  document.getElementById("company-website").value = c.website;
-  document.getElementById("company-cities").value = c.cities.map(cv => `${cv.city}:${cv.vertical}`).join(", ");
-  document.getElementById("company-sector").value = c.sector;
-  document.getElementById("company-category").value = c.category;
-  document.getElementById("hr-name").value = c.hr.name;
-  document.getElementById("hr-designation").value = c.hr.designation;
-  document.getElementById("hr-email").value = c.hr.email;
-  document.getElementById("hr-mobile").value = c.hr.mobile;
-  document.getElementById("hr-location").value = c.hr.location;
-  document.getElementById("dh-name").value = c.designHead.name;
-  document.getElementById("dh-designation").value = c.designHead.designation;
-  document.getElementById("dh-email").value = c.designHead.email;
-  document.getElementById("dh-mobile").value = c.designHead.mobile;
-  document.getElementById("dh-location").value = c.designHead.location;
-}
+// Day/Night mode toggle
+const modeToggle = document.getElementById('mode-toggle');
+const sunIcon = document.getElementById('sun-icon');
+const moonIcon = document.getElementById('moon-icon');
 
-function findCompanyIndex(displayIndex) {
-  if (filteredCompanies.length) {
-    const name = filteredCompanies[displayIndex].name;
-    return companies.findIndex(c => c.name === name);
-  } else {
-    return displayIndex;
-  }
-}
-
-document.getElementById("cancel-edit-btn").onclick = () => {
-  editIndex = null;
-  document.getElementById("add-company-form").reset();
-  document.getElementById("form-title").textContent = "Add Company";
-  document.getElementById("submit-btn").textContent = "Add Company";
-  document.getElementById("cancel-edit-btn").style.display = "none";
-};
-
-document.getElementById("add-company-form").onsubmit = function(e) {
-  e.preventDefault();
-  const updatedCompany = {
-    name: document.getElementById("company-name").value,
-    website: document.getElementById("company-website").value,
-    cities: document.getElementById("company-cities").value.split(",").map((item) => {
-      let [city, vertical] = item.split(":").map((v) => v.trim());
-      return { city, vertical };
-    }),
-    sector: document.getElementById("company-sector").value,
-    category: document.getElementById("company-category").value,
-    hr: {
-      name: document.getElementById("hr-name").value,
-      designation: document.getElementById("hr-designation").value,
-      email: document.getElementById("hr-email").value,
-      mobile: document.getElementById("hr-mobile").value,
-      location: document.getElementById("hr-location").value
-    },
-    designHead: {
-      name: document.getElementById("dh-name").value,
-      designation: document.getElementById("dh-designation").value,
-      email: document.getElementById("dh-email").value,
-      mobile: document.getElementById("dh-mobile").value,
-      location: document.getElementById("dh-location").value
-    }
-  };
-  if (editIndex !== null) {
-    companies[editIndex] = updatedCompany;
-    editIndex = null;
-    document.getElementById("form-title").textContent = "Add Company";
-    document.getElementById("submit-btn").textContent = "Add Company";
-    document.getElementById("cancel-edit-btn").style.display = "none";
-  } else {
-    companies.push(updatedCompany);
-  }
-  saveCompanies(companies);
-  filteredCompanies = [];
-  document.getElementById("add-company-form").reset();
-  renderCompanies();
-};
-
-const modeToggle = document.getElementById("mode-toggle");
-const sunIcon = document.getElementById("sun-icon");
-const moonIcon = document.getElementById("moon-icon");
-
-modeToggle.addEventListener("click", () => {
+modeToggle.addEventListener('click', () => {
   const body = document.body;
-  const isDay = body.classList.contains("day-mode");
+  const isDay = body.classList.contains('day-mode');
   if (isDay) {
-    body.classList.remove("day-mode");
-    body.classList.add("night-mode");
-    sunIcon.style.display = "none";
-    moonIcon.style.display = "inline";
+    body.classList.remove('day-mode');
+    body.classList.add('night-mode');
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'inline';
   } else {
-    body.classList.remove("night-mode");
-    body.classList.add("day-mode");
-    sunIcon.style.display = "inline";
-    moonIcon.style.display = "none";
+    body.classList.remove('night-mode');
+    body.classList.add('day-mode');
+    sunIcon.style.display = 'inline';
+    moonIcon.style.display = 'none';
   }
 });
-if (document.body.classList.contains("night-mode")) {
-  sunIcon.style.display = "none";
-  moonIcon.style.display = "inline";
+
+if (document.body.classList.contains('night-mode')) {
+  sunIcon.style.display = 'none';
+  moonIcon.style.display = 'inline';
 } else {
-  sunIcon.style.display = "inline";
-  moonIcon.style.display = "none";
+  sunIcon.style.display = 'inline';
+  moonIcon.style.display = 'none';
 }
 
-const searchBar = document.getElementById("search-bar");
-searchBar.addEventListener("input", () => {
-  const query = searchBar.value.trim().toLowerCase();
-  if (!query) {
-    filteredCompanies = [];
-    renderCompanies();
-    return;
-  }
-  filteredCompanies = companies.filter((c) => {
-    const searchableFields = [
-      c.name.toLowerCase(),
-      c.sector.toLowerCase(),
-      c.category.toLowerCase(),
-      (c.cities || []).map(cv => `${cv.city.toLowerCase()} ${cv.vertical.toLowerCase()}`).join(" ")
-    ].join(" ");
-    return searchableFields.includes(query);
-  });
-  renderCompanies();
-});
+function initDashboard() {
+  fetchCompaniesFromSheet()
+    .then(data => {
+      companies = data;
+      filteredCompanies = data;
+      activeCategory = null;
+      renderCategoryFilters();
+      renderCompanies();
+    })
+    .catch(err => alert('Failed to load companies from Google Sheets: ' + err.message));
+}
 
-document.getElementById("login-btn").onclick = () => {
-  const modal = document.getElementById("login-modal");
-  modal.setAttribute("aria-hidden", "false");
-  modal.style.display = "flex";
-  document.getElementById("username").focus();
-};
-document.getElementById("close-login").onclick = () => {
-  const modal = document.getElementById("login-modal");
-  modal.setAttribute("aria-hidden", "true");
-  modal.style.display = "none";
-};
-document.getElementById("login-form").onsubmit = (e) => {
-  e.preventDefault();
-  const u = document.getElementById("username").value.trim();
-  const p = document.getElementById("password").value;
-  if (u === DEMO_USER.username && p === DEMO_USER.password) {
-    isLoggedIn = true;
-    companies = getCompanies();
-    document.getElementById("login-modal").setAttribute("aria-hidden", "true");
-    document.getElementById("login-modal").style.display = "none";
-    document.getElementById("login-btn").style.display = "none";
-    document.getElementById("logout-btn").style.display = "inline";
-    filteredCompanies = [];
-    searchBar.value = "";
-    renderCompanies();
-  } else {
-    alert("Login failed: Invalid username or password.");
-  }
-};
-document.getElementById("logout-btn").onclick = () => {
-  isLoggedIn = false;
-  companies = getCompanies();
-  filteredCompanies = [];
-  searchBar.value = "";
-  document.getElementById("login-btn").style.display = "inline";
-  document.getElementById("logout-btn").style.display = "none";
-  renderCompanies();
-};
-
-companies = getCompanies();
-renderCompanies();
+initDashboard();

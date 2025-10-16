@@ -16,8 +16,7 @@
         <div class="header-left">
           <h1>Design companies dashboard</h1>
           <p class="subtitle">
-            A curated directory of design-driven companies, their sectors, and
-            contacts.
+            A curated directory of design-driven companies.
           </p>
         </div>
         <nav>
@@ -26,7 +25,7 @@
             aria-label="Toggle day/night mode"
             class="icon-toggle-btn"
           >
-            <!-- Sun icon shown when in day mode -->
+            <!-- Sun icon -->
             <svg
               id="sun-icon"
               xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +48,7 @@
                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
               </g>
             </svg>
-            <!-- Moon icon shown when in night mode -->
+            <!-- Moon icon -->
             <svg
               id="moon-icon"
               xmlns="http://www.w3.org/2000/svg"
@@ -64,157 +63,18 @@
               <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010 9.79z" />
             </svg>
           </button>
-          <button id="login-btn" class="pill-btn">Login</button>
-          <button id="logout-btn" style="display: none" class="pill-btn">
-            Logout
-          </button>
         </nav>
       </div>
     </header>
     <main class="container">
-      <section class="search-section">
-        <input
-          type="search"
-          id="search-bar"
-          placeholder="Search companies…"
-          aria-label="Search companies"
-        />
+      <section class="filter-section">
+        <strong>Filter by Design Category:</strong>
+        <div id="category-filters">
+          <!-- Filter buttons inserted here -->
+        </div>
       </section>
       <section id="company-list" aria-label="Company List"></section>
-      <section
-        id="add-company-section"
-        style="display: none"
-        aria-label="Add/Edit Company Form"
-      >
-        <h2 id="form-title">Add Company</h2>
-        <form id="add-company-form" novalidate>
-          <fieldset>
-            <legend>Company Details</legend>
-            <input
-              type="text"
-              id="company-name"
-              placeholder="Company Name"
-              required
-            />
-            <input
-              type="url"
-              id="company-website"
-              placeholder="Company Website (https://...)"
-              required
-            />
-            <input
-              type="text"
-              id="company-cities"
-              placeholder="Cities & Verticals (city:vertical, ...)"
-              required
-            />
-            <input
-              type="text"
-              id="company-sector"
-              placeholder="Sector (e.g. FMCG)"
-              required
-            />
-            <input
-              type="text"
-              id="company-category"
-              placeholder="Design Category (e.g. Product)"
-              required
-            />
-          </fieldset>
-          <fieldset>
-            <legend>HR Details</legend>
-            <input type="text" id="hr-name" placeholder="HR Name" required />
-            <input
-              type="text"
-              id="hr-designation"
-              placeholder="HR Designation"
-              required
-            />
-            <input type="email" id="hr-email" placeholder="HR Email" required />
-            <input type="tel" id="hr-mobile" placeholder="HR Mobile" required />
-            <input
-              type="text"
-              id="hr-location"
-              placeholder="HR Location"
-              required
-            />
-          </fieldset>
-          <fieldset>
-            <legend>Design Head Details</legend>
-            <input
-              type="text"
-              id="dh-name"
-              placeholder="Design Head Name"
-              required
-            />
-            <input
-              type="text"
-              id="dh-designation"
-              placeholder="Design Head Designation"
-              required
-            />
-            <input
-              type="email"
-              id="dh-email"
-              placeholder="Design Head Email"
-              required
-            />
-            <input
-              type="tel"
-              id="dh-mobile"
-              placeholder="Design Head Mobile"
-              required
-            />
-            <input
-              type="text"
-              id="dh-location"
-              placeholder="Design Head Location"
-              required
-            />
-          </fieldset>
-          <button type="submit" class="pill-btn accent" id="submit-btn">
-            Add Company
-          </button>
-          <button
-            type="button"
-            class="pill-btn"
-            id="cancel-edit-btn"
-            style="display: none"
-          >
-            Cancel Edit
-          </button>
-        </form>
-      </section>
     </main>
-    <div
-      id="login-modal"
-      class="modal"
-      aria-hidden="true"
-      role="dialog"
-      aria-labelledby="login-title"
-    >
-      <div class="modal-content">
-        <h2 id="login-title">Login</h2>
-        <form id="login-form" novalidate>
-          <input
-            type="text"
-            id="username"
-            placeholder="Username"
-            required
-            autocomplete="username"
-          />
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-            autocomplete="current-password"
-          />
-          <button type="submit" class="pill-btn accent">Login</button>
-        </form>
-        <button id="close-login" class="pill-btn">Cancel</button>
-      </div>
-    </div>
     <script src="script.js"></script>
   </body>
 </html>
